@@ -1,0 +1,36 @@
+{
+  "name": "duvinadam-richmedia2-project1",
+  "version": "1.0.0",
+  "engines": {
+    "node": "10.16.0",
+    "npm": "6.9.0"
+  },
+  "description": "Project 1 for Rich Media 2",
+  "main": "./src/server.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "pretest": "eslint ./src --fix",
+    "test": "echo \"No Tests\"",
+    "build": "babel ./client --out-file ./hosted/bundle.js",
+    "watch": "babel --watch ./client --out-file ./hosted/bundle.js",
+    "nodemon": "nodemon --watch ./server ./server/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adamduvin/DuvinAdam-RichMedia2-Project1.git"
+  },
+  "author": "Adam Duvin",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/adamduvin/DuvinAdam-RichMedia2-Project1/issues"
+  },
+  "homepage": "https://github.com/adamduvin/DuvinAdam-RichMedia2-Project1#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.18.2",
+    "nodemon": "^1.19.3"
+  }
+}
