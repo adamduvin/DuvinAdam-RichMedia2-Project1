@@ -9,9 +9,10 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 const urlStruct = {
   GET: {
     '/': htmlHandler.getIndex,
+    '/createNewUser': htmlHandler.getCreateUser,
     '/style.css': htmlHandler.getCSS,
     '/bundle.js': htmlHandler.getBundle,
-    '/getUsers': contentHandler.getUsers,
+    '/loginUser': contentHandler.loginUser,
     '/notReal': contentHandler.notFound,
     '/success': contentHandler.success,
     '/badRequest': contentHandler.badRequest,
@@ -36,7 +37,7 @@ const handleGet = (request, response, parsedUrl) => {
 };
 
 const handlePost = (request, response, parsedUrl) => {
-  if (parsedUrl.pathname === '/addUser') {
+  if (parsedUrl.pathname === '/loginUser') {
     const res = response;
     const body = [];
 
@@ -53,7 +54,8 @@ const handlePost = (request, response, parsedUrl) => {
     request.on('end', () => {
       const bodyString = Buffer.concat(body).toString();
       const bodyParams = query.parse(bodyString);
-      contentHandler.addUser(request, res, bodyParams);
+      // change to login
+      contentHandler.loginUser(request, res, bodyParams);
     });
   }
 };

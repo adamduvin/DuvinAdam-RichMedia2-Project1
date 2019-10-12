@@ -11,10 +11,30 @@ const respondMeta = (request, response, status) => {
   response.end();
 };
 
-const getUsers = (request, response) => {
+const loginUser = (request, response, body) => {
   const responseJSON = {
-    users,
+    //users,
+    message: 'Username and password required.',
   };
+
+  if(!body.username || !body.password){
+    responseJSON.id = 'missingParams';
+    return respond(request, response, 400, responseJSON);
+  }
+
+  if(!users[body.username]){
+    responseJSON.message = 'Incorrect username.'
+    responseJSON.id = 'missingParams';
+    return respond(request, response, 400, responseJSON);
+  }
+
+  if(!users[body.password]){
+    responseJSON.message = 'Incorrect password.'
+    responseJSON.id = 'missingParams';
+    return respond(request, response, 400, responseJSON);
+  }
+
+  // Make it change to the chat screen with user's username
 
   return respond(request, response, 200, responseJSON);
 };

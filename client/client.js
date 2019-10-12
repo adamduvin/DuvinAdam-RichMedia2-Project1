@@ -1,12 +1,12 @@
 const parseJSON = (xhr, content) => {
   //parse response (obj will be empty in a 204 updated)
   const obj = JSON.parse(xhr.response);
-  console.dir(obj);
   
   //if message in response, add to screen
   if(obj.message) {
     const p = document.createElement('p');
     p.textContent = `Message: ${obj.message}`;
+    //p.id
     content.appendChild(p);
   }
   
@@ -50,7 +50,7 @@ const handleResponse = (xhr, parseResponses) => {
 
   const sendAjax = (e, userForm) => {
     const url = userForm.querySelector('#urlField').value;
-    console.dir(url);
+    //console.dir(url);
     const method = userForm.querySelector('#methodSelect').value;
     
     const xhr = new XMLHttpRequest();
@@ -70,23 +70,23 @@ const handleResponse = (xhr, parseResponses) => {
     return false;
   };
 
-  const sendPost = (e, nameForm) => {
-    const nameAction = nameForm.getAttribute('action');
-    const nameMethod = nameForm.getAttribute('method');
+  const sendPost = (e, loginForm) => {
+    const usernameAction = loginForm.getAttribute('action');
+    const usernameMethod = loginForm.getAttribute('method');
 
-    const nameField = nameForm.querySelector('#nameField');
-    const ageField = nameForm.querySelector('#ageField');
+    const usernameField = loginForm.querySelector('#usernameField');
+    const passwordField = loginForm.querySelector('#passwordField');
 
     const xhr = new XMLHttpRequest();
 
-    xhr.open(nameMethod, nameAction);
+    xhr.open(usernameMethod, usernameAction);
 
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.setRequestHeader('Accept', 'application/json');
 
     xhr.onload = () => handleResponse(xhr);
 
-    const formData = `name=${nameField.value}&age=${ageField.value}`;
+    const formData = `username=${usernameField.value}&password=${passwordField.value}`;
 
     xhr.send(formData);
 
@@ -95,15 +95,14 @@ const handleResponse = (xhr, parseResponses) => {
   }
 
   const init = () => {
-    const nameForm = document.querySelector('#nameForm');
+    const loginForm = document.querySelector('#loginForm');
+    const loginButton = loginForm.querySelector('#loginButton');
     const userForm = document.querySelector('#userForm');
 
-    const getUsers = (e) => sendAjax(e, userForm);
-    const addUser = (e) => sendPost(e, nameForm);
+    const sendUser = (e) => sendPost(e, loginForm);
 
-    userForm.addEventListener('submit', getUsers);
-    nameForm.addEventListener('submit', addUser);
-    console.dir('test');
+    //userForm.addEventListener('submit', getUsers);
+    loginButton.addEventListener('submit', sendUser);
   };
 
   window.onload = init;

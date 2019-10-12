@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Our simple HTTP server</title>
+  <title>Chat App - Login</title>
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
@@ -9,24 +9,18 @@
 </head>
 <body>
   <section id="top">
-    <h3>POST Status Code Tests</h3>
-    <form id="nameForm" action="/addUser" method="post">
-      <label for="name">Name: </label>
-      <input id="nameField" type="text" name="name" />
-      <label for="age">Age: </label>
-      <input id="ageField" type="number" name="age" min="0" max="100" step="1"/>
-      <input type="submit" value="Add User" />
+    <h3>Login</h3>
+    <form id="loginForm" action="/loginUser" method="post">
+      <label for="username">Username: </label>
+      <input id="usernameField" type="text" name="username" />
+      <p></p>
+      <label for="Password">Password: </label>
+      <input id="passwordField" type="text" name="password" />
+      <p></p>
+      <input id="loginButton" type="submit" value="Login" />
     </form>
-    <form id="userForm" action="/getUsers" method="get">
-      <select id='urlField'>
-        <option value='/getUsers'>/getUsers</option>
-        <option value='/notReal'>/notReal</option>
-      </select>
-      <select id="methodSelect">
-        <option value="get">GET</option>
-        <option value="head">HEAD</option>
-      </select>
-      <input type="submit" value="Get User" />
+    <form id="createForm" action="/createNewUser" method="get">
+      <input id="createNewUserButton" type="submit" value="Create New Account" />
     </form>
   </section>
   <section id="content">

@@ -3,12 +3,12 @@
 var parseJSON = function parseJSON(xhr, content) {
     //parse response (obj will be empty in a 204 updated)
     var obj = JSON.parse(xhr.response);
-    console.dir(obj);
 
     //if message in response, add to screen
     if (obj.message) {
         var p = document.createElement('p');
         p.textContent = 'Message: ' + obj.message;
+        //p.id
         content.appendChild(p);
     }
 
@@ -52,7 +52,7 @@ var handleResponse = function handleResponse(xhr, parseResponses) {
 
 var sendAjax = function sendAjax(e, userForm) {
     var url = userForm.querySelector('#urlField').value;
-    console.dir(url);
+    //console.dir(url);
     var method = userForm.querySelector('#methodSelect').value;
 
     var xhr = new XMLHttpRequest();
@@ -75,16 +75,16 @@ var sendAjax = function sendAjax(e, userForm) {
     return false;
 };
 
-var sendPost = function sendPost(e, nameForm) {
-    var nameAction = nameForm.getAttribute('action');
-    var nameMethod = nameForm.getAttribute('method');
+var sendPost = function sendPost(e, loginForm) {
+    var usernameAction = loginForm.getAttribute('action');
+    var usernameMethod = loginForm.getAttribute('method');
 
-    var nameField = nameForm.querySelector('#nameField');
-    var ageField = nameForm.querySelector('#ageField');
+    var usernameField = loginForm.querySelector('#usernameField');
+    var passwordField = loginForm.querySelector('#passwordField');
 
     var xhr = new XMLHttpRequest();
 
-    xhr.open(nameMethod, nameAction);
+    xhr.open(usernameMethod, usernameAction);
 
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.setRequestHeader('Accept', 'application/json');
@@ -93,7 +93,7 @@ var sendPost = function sendPost(e, nameForm) {
         return handleResponse(xhr);
     };
 
-    var formData = 'name=' + nameField.value + '&age=' + ageField.value;
+    var formData = 'username=' + usernameField.value + '&password=' + passwordField.value;
 
     xhr.send(formData);
 
@@ -102,19 +102,16 @@ var sendPost = function sendPost(e, nameForm) {
 };
 
 var init = function init() {
-    var nameForm = document.querySelector('#nameForm');
+    var loginForm = document.querySelector('#loginForm');
+    var loginButton = loginForm.querySelector('#loginButton');
     var userForm = document.querySelector('#userForm');
 
-    var getUsers = function getUsers(e) {
-        return sendAjax(e, userForm);
-    };
-    var addUser = function addUser(e) {
-        return sendPost(e, nameForm);
+    var sendUser = function sendUser(e) {
+        return sendPost(e, loginForm);
     };
 
-    userForm.addEventListener('submit', getUsers);
-    nameForm.addEventListener('submit', addUser);
-    console.dir('test');
+    //userForm.addEventListener('submit', getUsers);
+    loginButton.addEventListener('submit', sendUser);
 };
 
 window.onload = init;
