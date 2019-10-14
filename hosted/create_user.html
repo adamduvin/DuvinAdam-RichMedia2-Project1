@@ -5,18 +5,19 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
-  <script src="/bundle.js"></script>
+  <script src="../src/createNewUser.js"></script> <!-- Will probably have to find some workaround if it can't find the file-->
 </head>
 <body>
   <section id="userInfo">
     <h3>Create Account</h3>
-    <form id="nameForm" action="/addUser" method="post">
+    <form id="userForm" action="/addUser" method="post">
       <label for="username">Username: </label>
-      <input id="nameField" type="text" name="userName" />
+      <input id="usernameField" type="text" name="username" />
       <p></p>
       <label for="password">Password: </label>
-      <input id="ageField" type="text" name="password" />
-      <input type="submit" value="Add User" />
+      <input id="passwordField" type="text" name="password" />
+      <p></p>
+      <input id="addUserButton" type="submit" value="Create User" />
     </form>
   </section>
   <section id="content">

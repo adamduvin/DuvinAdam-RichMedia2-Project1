@@ -4,6 +4,11 @@ const parseJSON = (xhr, content) => {
   
   //if message in response, add to screen
   if(obj.message) {
+    console.log('test');
+    if(obj.message === 'Switch to app'){
+      switchToApp(e);
+    }
+
     const p = document.createElement('p');
     p.textContent = `Message: ${obj.message}`;
     //p.id
@@ -48,21 +53,40 @@ const handleResponse = (xhr, parseResponses) => {
     }
   };
 
-  const sendAjax = (e, userForm) => {
-    const url = userForm.querySelector('#urlField').value;
-    //console.dir(url);
-    const method = userForm.querySelector('#methodSelect').value;
+  const sendAjax = (e, loginForm) => {
+    console.log('test');
+
+    const usernameField = loginForm.querySelector('#usernameField');
+    const passwordField = loginForm.querySelector('#passwordField');
+    
+    const url = loginForm.action + `?username=${usernameField.value}&password=${passwordField.value}`;
+    const method = 'get';
     
     const xhr = new XMLHttpRequest();
     xhr.open(method, url);
-    xhr.setRequestHeader("Accept", 'application/json');
+    xhr.setRequestHeader('Accept', 'application/json');
     if(method == 'get'){
-        xhr.onload = () => handleResponse(xhr, true);
+      
+      xhr.onload = () => handleResponse(xhr, true);
+      const formData = `username=${usernameField.value}&password=${passwordField.value}`;
+      console.log(formData);
+      xhr.send(formData);
     }
     else{
-        xhr.onload = () => handleResponse(xhr, false);
+      xhr.onload = () => handleResponse(xhr, false);
+      xhr.send();
     }
     
+    e.preventDefault();
+    
+
+    return false;
+  };
+
+  const switchToApp = (e) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('get', '/chatApp');
+    xhr.setRequestHeader("Accept", 'text/html');
     xhr.send();
     
     e.preventDefault();
@@ -71,6 +95,7 @@ const handleResponse = (xhr, parseResponses) => {
   };
 
   const sendPost = (e, loginForm) => {
+    console.log('test');
     const usernameAction = loginForm.getAttribute('action');
     const usernameMethod = loginForm.getAttribute('method');
 
@@ -92,17 +117,15 @@ const handleResponse = (xhr, parseResponses) => {
 
     e.preventDefault();
     return false;
-  }
+  };
 
   const init = () => {
     const loginForm = document.querySelector('#loginForm');
-    const loginButton = loginForm.querySelector('#loginButton');
-    const userForm = document.querySelector('#userForm');
-
-    const sendUser = (e) => sendPost(e, loginForm);
+    
+    const sendUser = (e) => sendAjax(e, loginForm);
 
     //userForm.addEventListener('submit', getUsers);
-    loginButton.addEventListener('submit', sendUser);
+    loginForm.addEventListener('submit', sendUser);
   };
 
   window.onload = init;

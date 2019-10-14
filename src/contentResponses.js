@@ -1,3 +1,6 @@
+const fs = require('fs');
+const htmlHandler = require('./htmlResponses.js');
+
 const users = {};
 
 const respond = (request, response, status, content) => {
@@ -11,11 +14,15 @@ const respondMeta = (request, response, status) => {
   response.end();
 };
 
+// Maybe change this to a GET
 const loginUser = (request, response, body) => {
+  //console.log(body);
   const responseJSON = {
     //users,
     message: 'Username and password required.',
   };
+
+  //console.log(body);
 
   if(!body.username || !body.password){
     responseJSON.id = 'missingParams';
@@ -28,13 +35,18 @@ const loginUser = (request, response, body) => {
     return respond(request, response, 400, responseJSON);
   }
 
-  if(!users[body.password]){
+  if(users[body.username].password != body.password){
     responseJSON.message = 'Incorrect password.'
     responseJSON.id = 'missingParams';
     return respond(request, response, 400, responseJSON);
   }
 
   // Make it change to the chat screen with user's username
+  responseJSON.message = 'Switch to app';
+
+  /*response.writeHead(200, { 'Content-Type': 'text/html' });
+  response.write(fs.readFileSync(`${__dirname}/../hosted/chat_app.html`));
+  response.end();*/
 
   return respond(request, response, 200, responseJSON);
 };
@@ -44,30 +56,40 @@ const getUsersMeta = (request, response) => {
 };
 
 const addUser = (request, response, body) => {
+  //console.log(body);
   const responseJSON = {
-    message: 'Name and age are both required.',
+    message: 'Username and password are both required.',
   };
 
-  if (!body.name || !body.age) {
+  if (!body.username || !body.password) {
     responseJSON.id = 'missingParams';
     return respond(request, response, 400, responseJSON);
   }
 
   let responseCode = 201;
 
-  if (users[body.name]) {
-    responseCode = 204;
+  if (users[body.username]) {
+    responseJSON.message = 'A user with that username already exists';
+    responseJSON.id = 'usernameTaken';
+    return respond(request, response, 400, responseJSON);
   } else {
-    users[body.name] = {};
+    users[body.username] = {};
   }
 
-  users[body.name].name = body.name;
-  users[body.name].age = body.age;
+  users[body.username].username = body.username;
+  users[body.username].password = body.password;
+  users[body.username].permissions = {};
 
+  // Change to app page passing user's account
   if (responseCode === 201) {
-    responseJSON.message = 'Created Successfully';
-    return respond(request, response, responseCode, responseJSON);
+    /*responseJSON.message = 'Switch to app';
+    return respond(request, response, responseCode, responseJSON);*/
+    response.writeHead(responseCode, { 'Content-Type': 'text/html' });
+    response.write(fs.readFileSync(`${__dirname}/../hosted/chat_app.html`));
+    response.end();
   }
+
+  //console.log(users);
 
   return respondMeta(request, response, responseCode);
 };
@@ -86,7 +108,8 @@ const notFoundMeta = (request, response) => {
 };
 
 module.exports = {
-  getUsers,
+  //getUsers,
+  loginUser,
   getUsersMeta,
   addUser,
   notFound,
