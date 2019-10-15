@@ -1,12 +1,13 @@
+// Parses the returned JSON and appends elements to the page or changes to the app
 const parseJSON = (xhr, content) => {
   //parse response (obj will be empty in a 204 updated)
   const obj = JSON.parse(xhr.response);
   
   //if message in response, add to screen
   if(obj.message) {
-    console.log('test');
     if(obj.message === 'Switch to app'){
-      switchToApp(e);
+      console.log('test');
+      switchToApp(obj.username);
     }
 
     const p = document.createElement('p');
@@ -24,6 +25,7 @@ const parseJSON = (xhr, content) => {
   }
 };
 
+// Called when something is returned and appends messages to the page based on result and sometimes calls parseJSON
 const handleResponse = (xhr, parseResponses) => {
     const content = document.querySelector("#content");
 
@@ -53,13 +55,15 @@ const handleResponse = (xhr, parseResponses) => {
     }
   };
 
+  //Sends get requests
   const sendAjax = (e, loginForm) => {
-    console.log('test');
+    //console.log('test');
 
     const usernameField = loginForm.querySelector('#usernameField');
     const passwordField = loginForm.querySelector('#passwordField');
     
     const url = loginForm.action + `?username=${usernameField.value}&password=${passwordField.value}`;
+    console.log(loginForm.action);
     const method = 'get';
     
     const xhr = new XMLHttpRequest();
@@ -69,7 +73,7 @@ const handleResponse = (xhr, parseResponses) => {
       
       xhr.onload = () => handleResponse(xhr, true);
       const formData = `username=${usernameField.value}&password=${passwordField.value}`;
-      console.log(formData);
+      //console.log(formData);
       xhr.send(formData);
     }
     else{
@@ -83,17 +87,20 @@ const handleResponse = (xhr, parseResponses) => {
     return false;
   };
 
-  const switchToApp = (e) => {
+  // Changes to the actual chat app
+  const switchToApp = (username) => {
     const xhr = new XMLHttpRequest();
-    xhr.open('get', '/chatApp');
+    const url = `/../hosted/chat_app.html?username=${username}`;
+    xhr.open('get', url);
     xhr.setRequestHeader("Accept", 'text/html');
     xhr.send();
     
-    e.preventDefault();
+    //e.preventDefault();
 
-    return false;
+    //return false;
   };
 
+  // Sends post requests
   const sendPost = (e, loginForm) => {
     console.log('test');
     const usernameAction = loginForm.getAttribute('action');
@@ -119,6 +126,7 @@ const handleResponse = (xhr, parseResponses) => {
     return false;
   };
 
+  // Adds a get request to the login button
   const init = () => {
     const loginForm = document.querySelector('#loginForm');
     

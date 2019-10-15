@@ -1,14 +1,15 @@
 'use strict';
 
+// Parses the returned JSON and appends elements to the page or changes to the app
 var parseJSON = function parseJSON(xhr, content) {
   //parse response (obj will be empty in a 204 updated)
   var obj = JSON.parse(xhr.response);
 
   //if message in response, add to screen
   if (obj.message) {
-    console.log('test');
     if (obj.message === 'Switch to app') {
-      switchToApp(e);
+      console.log('test');
+      switchToApp(obj.username);
     }
 
     var p = document.createElement('p');
@@ -26,6 +27,7 @@ var parseJSON = function parseJSON(xhr, content) {
   }
 };
 
+// Called when something is returned and appends messages to the page based on result and sometimes calls parseJSON
 var handleResponse = function handleResponse(xhr, parseResponses) {
   var content = document.querySelector("#content");
 
@@ -55,13 +57,15 @@ var handleResponse = function handleResponse(xhr, parseResponses) {
   }
 };
 
+//Sends get requests
 var sendAjax = function sendAjax(e, loginForm) {
-  console.log('test');
+  //console.log('test');
 
   var usernameField = loginForm.querySelector('#usernameField');
   var passwordField = loginForm.querySelector('#passwordField');
 
   var url = loginForm.action + ('?username=' + usernameField.value + '&password=' + passwordField.value);
+  console.log(loginForm.action);
   var method = 'get';
 
   var xhr = new XMLHttpRequest();
@@ -73,7 +77,7 @@ var sendAjax = function sendAjax(e, loginForm) {
       return handleResponse(xhr, true);
     };
     var formData = 'username=' + usernameField.value + '&password=' + passwordField.value;
-    console.log(formData);
+    //console.log(formData);
     xhr.send(formData);
   } else {
     xhr.onload = function () {
@@ -87,17 +91,20 @@ var sendAjax = function sendAjax(e, loginForm) {
   return false;
 };
 
-var switchToApp = function switchToApp(e) {
+// Changes to the actual chat app
+var switchToApp = function switchToApp(username) {
   var xhr = new XMLHttpRequest();
-  xhr.open('get', '/chatApp');
+  var url = '/../hosted/chat_app.html?username=' + username;
+  xhr.open('get', url);
   xhr.setRequestHeader("Accept", 'text/html');
   xhr.send();
 
-  e.preventDefault();
+  //e.preventDefault();
 
-  return false;
+  //return false;
 };
 
+// Sends post requests
 var sendPost = function sendPost(e, loginForm) {
   console.log('test');
   var usernameAction = loginForm.getAttribute('action');
@@ -125,6 +132,7 @@ var sendPost = function sendPost(e, loginForm) {
   return false;
 };
 
+// Adds a get request to the login button
 var init = function init() {
   var loginForm = document.querySelector('#loginForm');
 

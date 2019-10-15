@@ -6,6 +6,7 @@ const contentHandler = require('./contentResponses.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
+// Holds all of the available functions for requests
 const urlStruct = {
   GET: {
     '/': htmlHandler.getIndex,
@@ -31,11 +32,12 @@ const urlStruct = {
   },
 };
 
+// Handles get requests
 const handleGet = (request, response, parsedUrl) => {
   if (urlStruct[request.method][parsedUrl.pathname]) {
     // Probably should make a method for this
-    //console.log(parsedUrl);
-    if(parsedUrl.pathname === '/loginUser'){
+    // console.log(parsedUrl);
+    if (parsedUrl.pathname === '/loginUser') {
       const res = response;
       const body = [];
 
@@ -47,25 +49,25 @@ const handleGet = (request, response, parsedUrl) => {
 
       request.on('data', (chunk) => {
         body.push(chunk);
-        console.log(body);
+        // console.log(body);
       });
 
       request.on('end', () => {
-        const bodyString = Buffer.concat(body).toString();
+        // const bodyString = Buffer.concat(body).toString();
         const bodyParams = query.parse(parsedUrl.query);
-        console.log(bodyParams);
+        // console.log(bodyParams);
         contentHandler.loginUser(request, res, bodyParams);
       });
-    }
-    else{
+    } else {
+      console.log(urlStruct[request.method][parsedUrl.pathname]);
       urlStruct[request.method][parsedUrl.pathname](request, response);
     }
-    
   } else {
     urlStruct[request.method].notFound(request, response);
   }
 };
 
+// Handles post request
 const handlePost = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/loginUser' || parsedUrl.pathname === '/addUser') {
     const res = response;
@@ -84,22 +86,22 @@ const handlePost = (request, response, parsedUrl) => {
     request.on('end', () => {
       const bodyString = Buffer.concat(body).toString();
       const bodyParams = query.parse(bodyString);
-      //console.log(parsedUrl);
+      // console.log(parsedUrl);
       // change to login
-      if(parsedUrl.pathname === '/loginUser'){
+      if (parsedUrl.pathname === '/loginUser') {
         contentHandler.loginUser(request, res, bodyParams);
-      }
-      else if(parsedUrl.pathname === '/addUser'){
+      } else if (parsedUrl.pathname === '/addUser') {
         contentHandler.addUser(request, res, bodyParams);
       }
     });
   }
 };
 
+// Routes requests to handlePost and handleGet
 const onRequest = (request, response) => {
-  //console.log(request.url);
+  // console.log(request.url);
   const parsedUrl = url.parse(request.url);
-  console.log(parsedUrl);
+  // console.log(parsedUrl);
 
   if (request.method === 'POST') {
     handlePost(request, response, parsedUrl);
